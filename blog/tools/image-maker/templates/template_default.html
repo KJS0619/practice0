@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; font-family: "Malgun Gothic", "맑은 고딕", sans-serif; overflow: hidden; }
+  .card {
+    width: 1200px; height: 630px;
+    position: relative;
+    background: linear-gradient(135deg, #1c1a3d 0%, #2b2470 100%);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 90px 110px; color: #f4f2ff;
+  }
+  .badge {
+    width: 74px; height: 74px; border-radius: 18px;
+    background: rgba(255,138,76,0.18); border: 1px solid rgba(255,138,76,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: #ff8a4c; margin-bottom: 26px;
+  }
+  .title { font-size: 40px; font-weight: 800; line-height: 1.45; max-width: 900px; word-break: keep-all; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">✦</div>
+    <div class="title">{{TITLE}}</div>
+  </div>
+</body>
+</html>

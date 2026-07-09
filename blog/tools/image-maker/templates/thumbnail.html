@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; font-family: "Malgun Gothic", "맑은 고딕", sans-serif; overflow: hidden; }
+  .card {
+    width: 1200px; height: 630px;
+    position: relative;
+    background: radial-gradient(circle at 78% 18%, #3d3a86 0%, #1c1a3d 42%, #0e0c24 100%);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 90px 100px; color: #f4f2ff;
+  }
+  .accent { position: absolute; right: -120px; top: -120px; width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,138,76,0.55), rgba(255,138,76,0) 70%); }
+  .accent2 { position: absolute; left: -80px; bottom: -140px; width: 320px; height: 320px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(93,224,230,0.35), rgba(93,224,230,0) 70%); }
+  .kicker { font-size: 24px; letter-spacing: 4px; color: #ff8a4c; font-weight: 700; margin-bottom: 22px; z-index: 2; }
+  .title { font-size: 56px; font-weight: 800; line-height: 1.32; max-width: 940px; z-index: 2; word-break: keep-all; }
+  .subtitle { margin-top: 24px; font-size: 25px; color: #c7c3ea; max-width: 840px; line-height: 1.5; z-index: 2; word-break: keep-all; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="accent"></div>
+    <div class="accent2"></div>
+    <div class="kicker">{{KICKER}}</div>
+    <div class="title">{{TITLE}}</div>
+    <div class="subtitle">{{SUBTITLE}}</div>
+  </div>
+</body>
+</html>

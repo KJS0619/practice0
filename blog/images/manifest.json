@@ -1,0 +1,63 @@
+{
+  "draft": "D:\workspace\practice0\blog\draft.md",
+  "generatedAt": "2026-07-09T07:33:53.194Z",
+  "thumbnail": {
+    "template": "thumbnail",
+    "fields": {
+      "KICKER": "THUMBNAIL",
+      "TITLE": "포모도로 기법으로 집중력 높이는 법, 25분 타이머 3가지 규칙",
+      "SUBTITLE": "책상에 앉은 지 얼마 되지도 않았는데 벌써 휴대폰을 만지고 계신가요?"
+    },
+    "file": "images/thumbnail.png",
+    "approved": true,
+    "regenCount": 0,
+    "regenReasons": []
+  },
+  "markers": [
+    {
+      "id": 1,
+      "description": "토마토 모양 타이머와 책상 위 할 일 목록",
+      "template": "template_scene",
+      "fields": {
+        "KICKER": "SCENE",
+        "CAPTION": "토마토 모양 타이머와 책상 위 할 일 목록"
+      },
+      "file": "images/img_1.png",
+      "approved": true,
+      "regenCount": 1,
+      "regenReasons": [
+        "설명이 책상 위 사물이 놓인 물리적 장면을 묘사하므로 분위기/장면 템플릿(template_scene)이 default보다 적합"
+      ]
+    },
+    {
+      "id": 2,
+      "description": "포모도로 6단계 진행 과정을 보여주는 인포그래픽",
+      "template": "template_step",
+      "fields": {
+        "KICKER": "STEP",
+        "NUMBER": "06",
+        "TITLE": "포모도로 6단계 진행 과정을 보여주는 인포그래픽"
+      },
+      "file": "images/img_2.png",
+      "approved": true,
+      "regenCount": 1,
+      "regenReasons": [
+        "template_info의 STAT 필드가 '6단계'에서 '6단'까지만 매칭되어 단어가 잘려 보임(오독 유발). 설명이 '6단계 진행 과정'이라는 순서/프로세스를 나타내므로 template_step으로 교체해 잘림 문제 해결 및 의미 일치 개선"
+      ]
+    },
+    {
+      "id": 3,
+      "description": "포모도로 효과에 대한 두 연구 결과를 나란히 비교하는 그래픽",
+      "template": "template_info",
+      "fields": {
+        "KICKER": "INFO",
+        "STAT": "#",
+        "LABEL": "포모도로 효과에 대한 두 연구 결과를 나란히 비교하는 그래픽"
+      },
+      "file": "images/img_3.png",
+      "approved": true,
+      "regenCount": 0,
+      "regenReasons": []
+    }
+  ]
+}

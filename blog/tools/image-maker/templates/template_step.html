@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; font-family: "Malgun Gothic", "맑은 고딕", sans-serif; overflow: hidden; }
+  .card {
+    width: 1200px; height: 630px;
+    position: relative;
+    background: linear-gradient(135deg, #14122b 0%, #201c48 55%, #2b2470 100%);
+    display: flex; align-items: center; padding: 0 100px; color: #f4f2ff;
+  }
+  .grid { position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: linear-gradient(to bottom, transparent, black 40%, black 70%, transparent); }
+  .number { font-size: 220px; font-weight: 800; color: rgba(255,138,76,0.22); line-height: 1; margin-right: 40px; z-index: 2; min-width: 260px; text-align: center; }
+  .content { z-index: 2; max-width: 720px; }
+  .kicker { font-size: 22px; letter-spacing: 3px; color: #ff8a4c; font-weight: 700; margin-bottom: 18px; }
+  .title { font-size: 42px; font-weight: 800; line-height: 1.35; word-break: keep-all; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="grid"></div>
+    <div class="number">{{NUMBER}}</div>
+    <div class="content">
+      <div class="kicker">{{KICKER}}</div>
+      <div class="title">{{TITLE}}</div>
+    </div>
+  </div>
+</body>
+</html>

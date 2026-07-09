@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; font-family: "Malgun Gothic", "맑은 고딕", sans-serif; overflow: hidden; }
+  .card {
+    width: 1200px; height: 630px;
+    position: relative;
+    background: linear-gradient(160deg, #0e0c24 0%, #1c1a3d 100%);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 0 140px; color: #f4f2ff;
+  }
+  .mark { font-size: 120px; color: #ff8a4c; font-weight: 800; line-height: 1; margin-bottom: 10px; }
+  .quote { font-size: 40px; font-weight: 700; line-height: 1.5; word-break: keep-all; }
+  .kicker { margin-top: 30px; font-size: 20px; letter-spacing: 3px; color: #8a86bd; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="mark">"</div>
+    <div class="quote">{{QUOTE}}</div>
+    <div class="kicker">{{KICKER}}</div>
+  </div>
+</body>
+</html>

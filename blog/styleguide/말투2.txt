@@ -1,0 +1,122 @@
+
+
+카테고리
+
+검색하기
+BookCreation
+프로필사진
+멋진책
+글쓰기
+방명록
+RSS
+관리
+카테고리 없음
+C언어 - Structures
+멋진책 2024. 2. 27. 16:20 수정 비공개 삭제
+Structures
+C structures 는 특별한, 큰 변수로 여러개의 변수들이 내부에 존재한다. Structures는 C에서의 객체과 클래스를 구성하기 위한 기반이다. C Structures는 다음에 대해 사용된다. 
+
+C structures are special, large variables which contain several named variables inside. Structures are the basic foundation for objects and classes in C. Structures are used for:
+
+Serialization of data
+Passing multiple arguments in and out of functions through a single argument
+Data structures such as linked lists, binary trees, and more
+ 
+ data의 Serialization
+한개 매개변수를 통해 함수의 내, 외부에 여러 매개변수를 넘겨줌
+연결 리스트, 바이너리 트리, 등등과 같은 자료 구조들 
+The most basic example of structures are points, which are a single entity that contains two variables - x and y. Let's define a point:
+
+가장 기본적인 예는 points로서 두 변수 - x와 y를 포함하는 하나의 요소이다. 
+
+struct point {
+    int x;
+    int y;
+};
+Now, let's define a new point, and use it. Assume the function draw receives a point and draws it on a screen. Without structs, using it would require two arguments - each for every coordinate:
+
+structs 없이는 다음과 같이 사용하며 두개의 매개변수가 필요하다. 
+
+/* draws a point at 10, 5 */
+int x = 10;
+int y = 5;
+draw(x, y);
+Using structs, we can pass a point argument:
+
+structs를 사용하여 포인트 매개변수를 전달한다. 
+
+/* draws a point at 10, 5 */
+struct point p;
+p.x = 10;
+p.y = 5;
+draw(p);
+To access the point's variables, we use the dot . operator.
+
+포인트 변수를 접근하려면 . 연산자를 사용한다. 
+
+Typedefs
+Typedefs는 다른 이름으로 types을 정의하도록 한다. - structs와 포인터를 다룰 때 좋다. 
+
+Typedefs allow us to define types with a different name - which can come in handy when dealing with structs and pointers. In this case, we'd want to get rid of the long definition of a point structure. We can use the following syntax to remove the struct keyword from each time we want to define a new point:
+
+이 경우, 우리는 point structure의 긴 정의를 없애고자 한다. 다음 문을 사용하여 struct 키워드를 없애는 것이 가능하다. 
+
+typedef struct {
+    int x;
+    int y;
+} point;
+This will allow us to define a new point like this:
+
+point p;
+Structures can also hold pointers - which allows them to hold strings, or pointers to other structures as well - which is their real power. For example, we can define a vehicle structure in the following manner:
+
+Structures는 포인터를 포함할 수 있다. - 스트링, 다른 structures에 대한 포인터- 진짜 편리, 예를 들어 다음과 같이 정이해보자 
+
+typedef struct {
+    char * brand;
+    int model;
+} vehicle;
+Since brand is a char pointer, the vehicle type can contain a string (which, in this case, indicates the brand of the vehicle).
+
+brand 는 문자 포인터이므로 vehicle type은 스트링을 포함할 수 있다.(그것은 이 경우, vehicle의 브랜드를 가리킨다.) 
+
+ 
+
+vehicle mycar;
+mycar.brand = "Ford";
+mycar.model = 2007;
+Exercise
+Define a new data structure, named "person", which contains a string (pointer to char) called name, and an integer called age. 
+
+ 
+
+#include <stdio.h>
+
+// Define the 'person' data structure
+typedef struct {
+    char *name; // Pointer to char for the name
+    int age;    // Integer for the age
+} person;
+
+int main() {
+    // Example of using the 'person' structure
+    person p1;
+    p1.name = "John Doe";
+    p1.age = 30;
+    
+    printf("%s is %d years old.\n", p1.name, p1.age);
+    
+    return 0;
+}
+
+
+좋아요공감
+공유하기통계게시글 관리
+페이스북 카카오스토리 트위터
+0 Comments
+BookCreation
+지식을 정리하고 쳬계화하는 과정을 밟는다.
+Secret
+여러분의 소중한 댓글을 입력해주세요
+Send
+Blog is powered by AXZ / Designed by Tistory

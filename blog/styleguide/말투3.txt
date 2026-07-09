@@ -1,0 +1,168 @@
+
+
+카테고리
+
+검색하기
+BookCreation
+프로필사진
+멋진책
+글쓰기
+방명록
+RSS
+관리
+카테고리 없음
+C 언어 포인터(고급)
+멋진책 2024. 2. 27. 15:14 수정 비공개 삭제
+Pointers
+
+포인터는 변수이고 C 프로그래밍 언어에서 매우 중요한 역할을 한다. 다음과 같은 여러 이유로 사용된다. 
+
+Pointers are also variables and play a very important role in C programming language. They are used for several reasons, such as:
+
+ 
+
+스트링
+
+동적 메모리 할당
+
+함수 매개변수를 참조로 보낼때
+
+복잡한 자료 구조 구성할때
+
+함수를 가르킴
+
+특수 함수 구조 구축(Tree, Tries 등)
+
+기타등등 
+
+
+What is a pointer?
+
+포인터는 가장 단순한 정수 변수로 값을   실제 값 그자체를 가르치는 것이 아니라  가르키는 메모리 주소를 포함한다.
+A pointer is essentially a simple integer variable which holds a memory address that points to a value, instead of holding the actual value itself.
+
+ 
+
+컴퓨터의 메모리는 자료의 연속적 저장, 메모리의 특정 부분을 가르키는 포인터이다. 프로그램은 포인터를 사용하는데 그 포인터는 많은 양의 메모리를 가리킨다. - 그 지점에서 읽을 부분을 얼마나 큰지에 따라. 
+
+
+Strings as pointers
+
+이미 스트링을 논의했으나 약간 더 깊이 들어가서 C에서의 스트링이 무엇인지 이해해 보고자 한다. 
+
+
+The following line:
+
+char * name = "John";
+does three things:
+
+ 
+
+로컬(스택) 변수를 할당하고, 하나의 문자를 지적한다.
+
+스트링 John은 프로그램 메모리의 어느 곳에 있게 한다(물론, 컴파일되고 수행된 이후이다)
+
+name 매개변수가 J 문자가 있는 곳을 가르키도록 초기화한다. 
+
+배열과 같은 변수 문자로 접근해도 된다. 문자 J의 원래 값을 반환하나. name 변수는 실제적으로 정확히 스트링의 시작을 지적한다. 
+
+ 
+
+메모리는 순차적이므로 메모리에서 다음 문자로 이동하면 이동하면 스트링의 끝에 도달할 때 까지(null terminator)(0의 값을 가진 문자, \0) 스트링에서 다음 문자를 받는다. 
+
+
+Dereferencing
+
+ 
+
+디레퍼런싱(dereferencing)은 포인터가 가리키는 메모리 주소가 아닌, 그 메모리 주소에서 실제로 가리키는 값을 참조하는 행위입니다. 우리는 이미 배열에서 디레퍼런싱을 사용하고 있었지만, 그 사실을 몰랐을 뿐입니다. 대괄호 연산자(예: [0])는 배열의 첫 번째 항목에 접근합니다. 그리고 배열은 실제로 포인터이기 때문에, 배열의 첫 번째 항목에 접근하는 것은 포인터를 디레퍼런싱하는 것과 같습니다. 포인터를 디레퍼런싱하는 것은 별표 연산자(*)를 사용하여 수행됩니다.
+Dereferencing is the act of referring to where the pointer points, instead of the memory address. We are already using dereferencing in arrays - but we just didn't know it yet. The brackets operator - [0] for example, accesses the first item of the array. And since arrays are actually pointers, accessing the first item in the array is the same as dereferencing a pointer. Dereferencing a pointer is done using the asterisk operator *.
+
+If we want to create an array that will point to a different variable in our stack, we can write the following code:
+
+스택에서 다른 변수를 지적하는 배열을 생성하길 원하면, 아래 코드를 작성할 수 있다. 
+
+
+/* define a local variable a */
+int a = 1;
+
+/* define a pointer variable, and point it to a using the & operator */
+int * pointer_to_a = &a;
+
+printf("The value a is %d\n", a);
+printf("The value of a is also %d\n", *pointer_to_a);
+
+ 
+
+변수 a를 가리키기 위해 & 연산자를 사용했다. 
+Notice that we used the & operator to point at the variable a, which we have just created.
+
+We then referred to it using the dereferencing operator. We can also change the contents of the dereferenced variable:
+
+그 다음에 연산 참조를 사용하여 역참조된 변수의 내용을 변경할 수 있다. 
+
+int a = 1;
+int * pointer_to_a = &a;
+
+/* let's change the variable a */
+a += 1;
+
+/* we just changed the variable again! */
+*pointer_to_a += 1;
+
+/* will print out 3 */
+printf("The value of a is now %d\n", a);
+Exercise
+Create a pointer to the local variable n called pointer_to_n, and use it to increase the value of n by one.
+
+ 
+
+Certainly! Below is a simple C program that demonstrates how to create a pointer to a local variable n and then use it to increase the value of n by one.
+
+c
+Copy code
+#include <stdio.h>
+
+int main() {
+    int n = 10; // Initialize n
+    int *pointer_to_n = &n; // Create a pointer to n
+    
+    printf("Before: %d\n", n); // Print the value of n before increment
+
+    // Use the pointer to increase the value of n by one
+    *pointer_to_n = *pointer_to_n + 1;
+    
+    printf("After: %d\n", n); // Print the value of n after increment
+    
+    return 0;
+}
+This program does the following:
+
+ 
+
+10으로 초기화
+
+n 주소 값으로 pointer_to_n 으로 포인터 생성 
+
+포인터를 사용하여 n의 값을 접근하고 1증가
+
+n의 값을 이전 이후 프린트
+Initializes an integer variable n with a value of 10.
+Creates a pointer pointer_to_n that holds the address of n.
+Uses the pointer to access the value of n and increments it by one.
+Prints the value of n before and after the increment to show the change.
+
+
+
+
+
+좋아요공감
+공유하기통계게시글 관리
+페이스북 카카오스토리 트위터
+0 Comments
+BookCreation
+지식을 정리하고 쳬계화하는 과정을 밟는다.
+Secret
+여러분의 소중한 댓글을 입력해주세요
+Send
+Blog is powered by AXZ / Designed by Tistory
