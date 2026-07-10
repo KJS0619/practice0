@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포모도로 타이머</title>
+<style>
+  :root {
+    --focus-color: #e64545;
+    --short-color: #3fa796;
+    --long-color: #3f7ca7;
+    --bg: #1b1d24;
+    --card: #24262f;
+    --text: #f2f2f2;
+    --muted: #9a9ca6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Malgun Gothic", "Segoe UI", sans-serif;
+    transition: background 0.4s ease;
+  }
+  body.mode-focus { background: #2a1414; }
+  body.mode-short { background: #10221f; }
+  body.mode-long  { background: #10192a; }
+
+  .card {
+    width: 360px;
+    max-width: 92vw;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    text-align: center;
+  }
+  h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    letter-spacing: 0.02em;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  .modes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .modes button {
+    flex: 1;
+    padding: 8px 4px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .modes button.active {
+    color: #fff;
+    font-weight: 600;
+  }
+  .modes button[data-mode="focus"].active { background: var(--focus-color); }
+  .modes button[data-mode="short"].active { background: var(--short-color); }
+  .modes button[data-mode="long"].active { background: var(--long-color); }
+
+  .time-display {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 8px 0 24px;
+    font-variant-numeric: tabular-nums;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .controls button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #startPause {
+    background: var(--focus-color);
+    color: #fff;
+    min-width: 110px;
+  }
+  body.mode-short #startPause { background: var(--short-color); }
+  body.mode-long #startPause { background: var(--long-color); }
+  #reset {
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+  }
+  .stats {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 16px;
+  }
+  .settings {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .settings label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .settings input {
+    width: 48px;
+    text-align: center;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    padding: 4px;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body class="mode-focus">
+  <div class="card">
+    <h1>포모도로 타이머</h1>
+    <div class="subtitle">집중과 휴식을 반복해서 몰입을 유지하세요</div>
+
+    <div class="modes">
+      <button data-mode="focus" class="active">집중</button>
+      <button data-mode="short">짧은 휴식</button>
+      <button data-mode="long">긴 휴식</button>
+    </div>
+
+    <div class="time-display" id="timeDisplay">25:00</div>
+
+    <div class="controls">
+      <button id="startPause">시작</button>
+      <button id="reset">초기화</button>
+    </div>
+
+    <div class="settings">
+      <label>집중(분)
+        <input type="number" id="focusInput" min="1" max="120" value="25">
+      </label>
+      <label>짧은휴식(분)
+        <input type="number" id="shortInput" min="1" max="60" value="5">
+      </label>
+      <label>긴휴식(분)
+        <input type="number" id="longInput" min="1" max="60" value="15">
+      </label>
+    </div>
+
+    <div class="stats">
+      <span>완료한 집중 세션: <strong id="sessionCount">0</strong></span>
+      <span id="statusLabel">대기 중</span>
+    </div>
+  </div>
+
+<script>
+(function () {
+  const DURATIONS = { focus: 25 * 60, short: 5 * 60, long: 15 * 60 };
+
+  const modeButtons = document.querySelectorAll('.modes button');
+  const timeDisplay = document.getElementById('timeDisplay');
+  const startPauseBtn = document.getElementById('startPause');
+  const resetBtn = document.getElementById('reset');
+  const sessionCountEl = document.getElementById('sessionCount');
+  const statusLabel = document.getElementById('statusLabel');
+  const focusInput = document.getElementById('focusInput');
+  const shortInput = document.getElementById('shortInput');
+  const longInput = document.getElementById('longInput');
+
+  let currentMode = 'focus';
+  let remaining = DURATIONS[currentMode];
+  let timerId = null;
+  let running = false;
+  let sessionCount = 0;
+
+  function formatTime(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const s = Math.floor(totalSeconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  function updateDisplay() {
+    timeDisplay.textContent = formatTime(remaining);
+    document.title = `${formatTime(remaining)} - 포모도로`;
+  }
+
+  function setMode(mode, resetTime = true) {
+    currentMode = mode;
+    document.body.classList.remove('mode-focus', 'mode-short', 'mode-long');
+    document.body.classList.add(`mode-${mode}`);
+    modeButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.mode === mode));
+    if (resetTime) {
+      remaining = DURATIONS[mode];
+      updateDisplay();
+    }
+  }
+
+  function playBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      oscillator.type = 'sine';
+      oscillator.frequency.value = 880;
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 0.6);
+    } catch (e) {
+      // 오디오 재생을 지원하지 않는 환경은 조용히 무시한다
+    }
+  }
+
+  function tick() {
+    remaining -= 1;
+    if (remaining <= 0) {
+      clearInterval(timerId);
+      running = false;
+      playBeep();
+
+      if (currentMode === 'focus') {
+        sessionCount += 1;
+        sessionCountEl.textContent = sessionCount;
+        const nextMode = sessionCount % 4 === 0 ? 'long' : 'short';
+        setMode(nextMode);
+      } else {
+        setMode('focus');
+      }
+
+      statusLabel.textContent = '완료! 다음 단계로 전환됨';
+      startPauseBtn.textContent = '시작';
+      return;
+    }
+    updateDisplay();
+  }
+
+  function startPause() {
+    if (running) {
+      clearInterval(timerId);
+      running = false;
+      startPauseBtn.textContent = '시작';
+      statusLabel.textContent = '일시정지됨';
+    } else {
+      running = true;
+      startPauseBtn.textContent = '일시정지';
+      statusLabel.textContent = currentMode === 'focus' ? '집중 중' : '휴식 중';
+      timerId = setInterval(tick, 1000);
+    }
+  }
+
+  function reset() {
+    clearInterval(timerId);
+    running = false;
+    remaining = DURATIONS[currentMode];
+    updateDisplay();
+    startPauseBtn.textContent = '시작';
+    statusLabel.textContent = '대기 중';
+  }
+
+  modeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      clearInterval(timerId);
+      running = false;
+      startPauseBtn.textContent = '시작';
+      statusLabel.textContent = '대기 중';
+      setMode(btn.dataset.mode);
+    });
+  });
+
+  startPauseBtn.addEventListener('click', startPause);
+  resetBtn.addEventListener('click', reset);
+
+  function applyCustomDurations() {
+    const focusMin = Math.min(120, Math.max(1, parseInt(focusInput.value, 10) || 25));
+    const shortMin = Math.min(60, Math.max(1, parseInt(shortInput.value, 10) || 5));
+    const longMin = Math.min(60, Math.max(1, parseInt(longInput.value, 10) || 15));
+    DURATIONS.focus = focusMin * 60;
+    DURATIONS.short = shortMin * 60;
+    DURATIONS.long = longMin * 60;
+    if (!running) {
+      remaining = DURATIONS[currentMode];
+      updateDisplay();
+    }
+  }
+
+  [focusInput, shortInput, longInput].forEach((input) => {
+    input.addEventListener('change', applyCustomDurations);
+  });
+
+  updateDisplay();
+})();
+</script>
+</body>
+</html>
