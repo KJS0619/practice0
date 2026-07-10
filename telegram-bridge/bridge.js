@@ -18,7 +18,9 @@ const WORKDIR = 'D:\\workspace\\practice0';
 const STATE_DIR = path.join(__dirname, 'state');
 const OFFSET_FILE = path.join(STATE_DIR, 'offset.json');
 const ALLOWLIST_FILE = path.join(STATE_DIR, 'allowlist.json');
+const SESSIONS_FILE = path.join(STATE_DIR, 'sessions.json');
 const LOG_FILE = path.join(STATE_DIR, 'bridge.log');
+const RESET_WORDS = ['새 대화', '새대화', '/new', '리셋', '초기화'];
 const CLAUDE_TIMEOUT_MS = 5 * 60 * 1000;
 const CLAUDE_EXE = 'C:\\Users\\user\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe';
 
@@ -69,32 +71,59 @@ async function sendMessage(chatId, text) {
   }
 }
 
-function runClaude(prompt) {
+// resume용 session_id가 있으면 이어서, 없으면 새로 시작한다.
+// --output-format json으로 받아서 session_id를 파싱해 다음 턴에 이어 쓴다.
+function runClaudeOnce(prompt, sessionId) {
   return new Promise((resolve) => {
-    // shell:false + 실제 claude.exe를 직접 호출 — cmd.exe를 거치지 않아
-    // 개행/한글이 섞인 긴 프롬프트가 인자 파싱 과정에서 깨지는 문제를 피한다.
+    const args = ['-p', prompt, '--output-format', 'json', '--dangerously-skip-permissions'];
+    if (sessionId) args.push('--resume', sessionId);
+
     execFile(
       CLAUDE_EXE,
-      ['-p', prompt, '--dangerously-skip-permissions'],
+      args,
       { cwd: WORKDIR, timeout: CLAUDE_TIMEOUT_MS, maxBuffer: 10 * 1024 * 1024, shell: false },
       (err, stdout, stderr) => {
-        log(`claude 종료: err=${err ? err.message : 'none'} stdout길이=${(stdout || '').length} stderr길이=${(stderr || '').length}`);
+        log(`claude 종료: err=${err ? err.message : 'none'} resume=${sessionId || '(새 세션)'} stdout길이=${(stdout || '').length} stderr길이=${(stderr || '').length}`);
         if (stderr && stderr.trim()) log(`claude stderr: ${stderr.trim().slice(0, 500)}`);
-        if (err && !(stdout && stdout.trim())) {
-          resolve(`(오류) ${err.message}\n${(stderr || '').slice(0, 1000)}`.slice(0, 3800));
+
+        let parsed = null;
+        try {
+          parsed = JSON.parse((stdout || '').trim());
+        } catch {
+          // JSON이 아니면 (예: 존재하지 않는 세션 ID로 resume 실패) 실패로 처리
+        }
+
+        if (parsed && typeof parsed.result === 'string') {
+          resolve({ ok: !parsed.is_error, text: parsed.result, sessionId: parsed.session_id || sessionId });
           return;
         }
-        resolve(stdout && stdout.trim() ? stdout.trim() : `(오류) ${stderr || '알 수 없는 오류'}`);
+
+        resolve({
+          ok: false,
+          text: `(오류) ${err ? err.message : ''} ${(stderr || stdout || '').slice(0, 500)}`.trim(),
+          sessionId: null,
+        });
       }
     );
   });
 }
 
+async function runClaude(prompt, sessionId) {
+  let result = await runClaudeOnce(prompt, sessionId);
+  if (!result.ok && sessionId) {
+    // 이전 세션을 이어받지 못했을 수 있음(만료 등) → 새 세션으로 한 번 재시도
+    log(`세션 재개 실패, 새 세션으로 재시도: ${result.text.slice(0, 200)}`);
+    result = await runClaudeOnce(prompt, null);
+  }
+  return result;
+}
+
 function buildPrompt(userText) {
   return [
-    '다음은 텔레그램으로 무인(headless) 전달된 작업 요청이다. 지금 옆에서 바로 답해줄 사람이 없다.',
-    '확인 질문으로 멈추지 말고, 판단이 필요한 부분은 합리적인 기본값으로 스스로 정해서 끝까지 진행해라.',
+    '다음은 텔레그램으로 전달된 작업 요청이다. 이 대화는 이어지는 대화이니, 이전에 나눈 내용을 참고해서 답해도 된다.',
+    '옆에서 바로 답해줄 사람이 없는 무인 환경이니, 판단이 필요한 부분은 합리적인 기본값으로 스스로 정해서 가능한 한 끝까지 진행해라.',
     '설명이나 계획만 말하고 끝내지 말고, 필요하면 실제로 파일을 만들거나 수정하고, 명령을 실행하는 등 도구를 써서 작업을 완료해라.',
+    '정말 판단이 안 서는 부분만 짧게 되물어라. 되물을 땐 사용자가 다음 메시지로 답하면 이어진다.',
     '작업을 마치면 무엇을 했는지 몇 줄로 짧게 요약해서 답해라.',
     '',
     `요청: ${userText}`,
@@ -121,12 +150,29 @@ async function handleMessage(msg) {
     return;
   }
 
-  log(`명령 수신 (chat_id=${chatId}): ${text}`);
+  const sessions = loadJson(SESSIONS_FILE, {});
+
+  if (RESET_WORDS.includes(text.trim())) {
+    delete sessions[chatId];
+    saveJson(SESSIONS_FILE, sessions);
+    log(`대화 리셋 (chat_id=${chatId})`);
+    await sendMessage(chatId, '새 대화를 시작합니다. 이전 내용은 더 이상 참고하지 않습니다.');
+    return;
+  }
+
+  const prevSessionId = sessions[chatId];
+  log(`명령 수신 (chat_id=${chatId}, session=${prevSessionId || '(새 세션)'}): ${text}`);
   try {
-    const reply = await runClaude(buildPrompt(text));
-    log(`응답 미리보기: ${reply.slice(0, 300).replace(/\n/g, ' ')}`);
-    await sendMessage(chatId, reply);
-    log(`응답 전송 완료 (chat_id=${chatId})`);
+    const result = await runClaude(buildPrompt(text), prevSessionId);
+    log(`응답 미리보기: ${result.text.slice(0, 300).replace(/\n/g, ' ')}`);
+
+    if (result.sessionId) {
+      sessions[chatId] = result.sessionId;
+      saveJson(SESSIONS_FILE, sessions);
+    }
+
+    await sendMessage(chatId, result.text);
+    log(`응답 전송 완료 (chat_id=${chatId}, session=${result.sessionId || '(없음)'})`);
   } catch (err) {
     log(`처리 중 오류: ${err.message}`);
     await sendMessage(chatId, `처리 중 오류가 발생했습니다: ${err.message}`);
