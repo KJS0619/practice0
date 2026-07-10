@@ -4,3 +4,4 @@ node_modules/
 .env
 telegram-bridge/.env
 telegram-bridge/state/
+mailer/.env

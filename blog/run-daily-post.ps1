@@ -46,4 +46,14 @@ Set-Location "D:\workspace\practice0"
 & "C:\Users\user\AppData\Roaming\npm\node_modules\@anthropic-ai\claude-code\bin\claude.exe" -p $prompt --dangerously-skip-permissions 2>&1 |
   Out-File -FilePath $logFile -Append -Encoding utf8
 
+"===== $today 파이프라인 종료, 메일 발송 시도 =====" | Out-File -FilePath $logFile -Append -Encoding utf8
+
+Push-Location "D:\workspace\practice0\mailer"
+try {
+  node send-daily-mail.js $today 2>&1 | Out-File -FilePath $logFile -Append -Encoding utf8
+} catch {
+  "메일 발송 오류: $($_.Exception.Message)" | Out-File -FilePath $logFile -Append -Encoding utf8
+}
+Pop-Location
+
 "===== $today 실행 종료 =====" | Out-File -FilePath $logFile -Append -Encoding utf8
