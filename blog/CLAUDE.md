@@ -22,6 +22,7 @@
 - `run-daily-post.ps1` — Windows 작업 스케줄러 "BlogDailyPost"(매일 09:30)가 호출하는 실행 스크립트. 그날 뉴스 워처 결과(`Desktop\news\news_*.txt`)를 리서처의 1차 자료로 넘겨 "이번 주 소식" 주제로 파이프라인 전체를 무인 실행하고, `posts/오늘날짜/`에 저장한 뒤 텔레그램으로 완료를 알리고, `mailer/`로 그날 발행물을 메일 발송한다.
 - `../mailer/` (상위 폴더) — `posts/오늘날짜/draft_final.pdf`를 kjs0619@gmail.com으로 메일 발송하는 Node 스크립트(`send-daily-mail.js`, nodemailer + Gmail 앱 비밀번호, 메일 본문에는 그날 뉴스 브리핑과 날씨 카드 이미지도 함께 넣음). `send-daily-telegram.js`는 같은 내용을 텔레그램으로도 보내되, 4096자 제한 때문에 브리핑과 블로그 글을 문단 단위로 나눠 별도 메시지로 전송하고, 날씨 카드는 사진으로 먼저 보낸다. `run-daily-post.ps1`이 파이프라인 완료 후 둘 다 자동으로 호출한다. `send-digest-mail.js`/`send-digest-telegram.js`는 같은 방식으로 다이제스트(아래 참고)를 발송한다.
 - `digests/weekly/YYYY-MM-DD/`, `digests/monthly/YYYY-MM/` — 주간/월간 다이제스트 산출물(구성은 `posts/`와 동일: draft.md/draft_final.md/.pdf/images/). `run-weekly-digest.ps1`(작업 스케줄러 "BlogWeeklyDigest", 매주 월요일 10:00)과 `run-monthly-digest.ps1`(작업 스케줄러 "BlogMonthlyDigest", 매일 10:30 트리거되지만 스크립트 내부에서 매월 1일에만 동작)이 각각 최근 7일/지난 달의 `posts/*/draft_final.md`를 다이제스트 라이터(`agent/digest.md`)에게 자료로 넘겨 재작성시키고, 이미지 메이커·어셈블러를 거쳐 메일·텔레그램으로 발송한다.
+- `site-builder/generate-site.js` → `site/` (git 제외, 매번 재생성) — `posts/`·`digests/`의 모든 발행물을 정적 웹사이트로 만든다. 목록 페이지(`site/index.html`) + 글마다 페이지(`site/posts/날짜/`, `site/digests/.../`). **`site/.vercel/`은 Vercel 프로젝트 연결 정보라 재생성 시 지우지 않고 보존해야 한다** — 이게 없으면 매번 새 Vercel 프로젝트로 배포돼 버린다. 매일/주간/월간 스크립트가 각자 파이프라인 끝에서 `generate-site.js` 실행 후 `npx vercel --prod --yes`로 자동 재배포한다. 배포 주소: https://practice0-blog.vercel.app (Vercel 프로젝트명 "site", SSO 보호는 꺼서 공개 접근 가능하게 해둠).
 
 ## 에이전트 역할
 

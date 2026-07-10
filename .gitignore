@@ -5,3 +5,4 @@ node_modules/
 telegram-bridge/.env
 telegram-bridge/state/
 mailer/.env
+blog/site/
