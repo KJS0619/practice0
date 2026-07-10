@@ -1,0 +1,56 @@
+{
+  "draft": "D:\\workspace\\practice0\\blog\\digests\\weekly\\2026-07-10\\draft.md",
+  "generatedAt": "2026-07-10T06:40:56.964Z",
+  "thumbnail": {
+    "template": "thumbnail",
+    "fields": {
+      "KICKER": "THUMBNAIL",
+      "TITLE": "클로드(Claude) 주간 다이제스트: 7월 1주차를 관통한 3가지 흐름",
+      "SUBTITLE": "## 첫 번째 흐름: 신뢰를 쌓으려는 지배구조 발표"
+    },
+    "file": "images/thumbnail.png",
+    "approved": true,
+    "regenCount": 0,
+    "regenReasons": []
+  },
+  "markers": [
+    {
+      "id": 1,
+      "description": "클로드 위클리 다이제스트 표지 - Anthropic 로고와 한 주간 타임라인을 형상화한 이미지",
+      "template": "template_default",
+      "fields": {
+        "TITLE": "클로드 위클리 다이제스트 표지 - Anthropic 로고와 한 주간 타임라인을 형상화한 이미지"
+      },
+      "file": "images/img_1.png",
+      "approved": true,
+      "regenCount": 0,
+      "regenReasons": []
+    },
+    {
+      "id": 2,
+      "description": "Claude Code 버전 업데이트 로그와 커밋 히스토리를 보여주는 터미널 화면",
+      "template": "template_default",
+      "fields": {
+        "TITLE": "Claude Code 버전 업데이트 로그와 커밋 히스토리를 보여주는 터미널 화면"
+      },
+      "file": "images/img_2.png",
+      "approved": true,
+      "regenCount": 0,
+      "regenReasons": []
+    },
+    {
+      "id": 3,
+      "description": "안전장치와 평가 프레임워크를 상징하는 방패형 인포그래픽",
+      "template": "template_default",
+      "fields": {
+        "TITLE": "안전장치와 평가 프레임워크를 상징하는 방패형 인포그래픽"
+      },
+      "file": "images/img_3.png",
+      "approved": true,
+      "regenCount": 1,
+      "regenReasons": [
+        "template_info의 STAT 자리에 실제 수치가 없어 의미없는 '#' 기호가 크게 표시됨 - 방패형 인포그래픽 설명과 불일치하여 template_default로 재생성"
+      ]
+    }
+  ]
+}

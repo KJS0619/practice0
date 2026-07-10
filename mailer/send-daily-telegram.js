@@ -31,6 +31,20 @@ async function sendMessage(text) {
   if (!json.ok) throw new Error(`텔레그램 전송 실패: ${JSON.stringify(json)}`);
 }
 
+async function sendPhoto(photoPath, caption) {
+  const form = new FormData();
+  form.append('chat_id', String(CHAT_ID));
+  if (caption) form.append('caption', caption);
+  form.append('photo', new Blob([fs.readFileSync(photoPath)]), path.basename(photoPath));
+
+  const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+    method: 'POST',
+    body: form,
+  });
+  const json = await res.json();
+  if (!json.ok) throw new Error(`텔레그램 사진 전송 실패: ${JSON.stringify(json)}`);
+}
+
 // 문단(빈 줄) 단위로 쪼개서, 한도를 넘기지 않는 선에서 여러 메시지로 나눈다.
 // (단순 글자수 절단과 달리 문장/문단 중간이 끊기지 않는다.)
 async function sendLong(text) {
@@ -50,6 +64,14 @@ async function sendLong(text) {
 }
 
 async function main() {
+  const weatherImgPath = path.join('C:\\Users\\user\\Desktop\\news', `weather_${date}.png`);
+  if (fs.existsSync(weatherImgPath)) {
+    await sendPhoto(weatherImgPath, `🌤️ 오늘의 날씨 (${date})`);
+    console.log('날씨 카드 전송 완료');
+  } else {
+    console.log(`날씨 카드 없음, 건너뜀: ${weatherImgPath}`);
+  }
+
   if (fs.existsSync(briefPath)) {
     const brief = fs.readFileSync(briefPath, 'utf-8').trim();
     await sendLong(`📋 ${brief}`);

@@ -20,7 +20,8 @@
 - `research-result.md`, `draft.md`, `draft_final.md`, `assembler.md`/`assembler.html` — 단계별 산출물
 - `posts/YYYY-MM-DD/` — **날짜별로 쌓이는 정식 발행분.** 매일 자동 실행되는 글은 여기에 그날 폴더를 만들어 `research-result.md`/`draft.md`/`draft_final.md`/`draft_final.pdf`/`images/`를 전부 그 안에 저장한다. (블로그 루트에 흩어져 있는 파일들은 수동 실행/실험용)
 - `run-daily-post.ps1` — Windows 작업 스케줄러 "BlogDailyPost"(매일 09:30)가 호출하는 실행 스크립트. 그날 뉴스 워처 결과(`Desktop\news\news_*.txt`)를 리서처의 1차 자료로 넘겨 "이번 주 소식" 주제로 파이프라인 전체를 무인 실행하고, `posts/오늘날짜/`에 저장한 뒤 텔레그램으로 완료를 알리고, `mailer/`로 그날 발행물을 메일 발송한다.
-- `../mailer/` (상위 폴더) — `posts/오늘날짜/draft_final.pdf`를 kjs0619@gmail.com으로 메일 발송하는 Node 스크립트(`send-daily-mail.js`, nodemailer + Gmail 앱 비밀번호, 메일 본문에는 그날 뉴스 브리핑도 함께 넣음). `send-daily-telegram.js`는 같은 내용을 텔레그램으로도 보내되, 4096자 제한 때문에 브리핑과 블로그 글을 문단 단위로 나눠 별도 메시지로 전송한다. `run-daily-post.ps1`이 파이프라인 완료 후 둘 다 자동으로 호출한다.
+- `../mailer/` (상위 폴더) — `posts/오늘날짜/draft_final.pdf`를 kjs0619@gmail.com으로 메일 발송하는 Node 스크립트(`send-daily-mail.js`, nodemailer + Gmail 앱 비밀번호, 메일 본문에는 그날 뉴스 브리핑과 날씨 카드 이미지도 함께 넣음). `send-daily-telegram.js`는 같은 내용을 텔레그램으로도 보내되, 4096자 제한 때문에 브리핑과 블로그 글을 문단 단위로 나눠 별도 메시지로 전송하고, 날씨 카드는 사진으로 먼저 보낸다. `run-daily-post.ps1`이 파이프라인 완료 후 둘 다 자동으로 호출한다. `send-digest-mail.js`/`send-digest-telegram.js`는 같은 방식으로 다이제스트(아래 참고)를 발송한다.
+- `digests/weekly/YYYY-MM-DD/`, `digests/monthly/YYYY-MM/` — 주간/월간 다이제스트 산출물(구성은 `posts/`와 동일: draft.md/draft_final.md/.pdf/images/). `run-weekly-digest.ps1`(작업 스케줄러 "BlogWeeklyDigest", 매주 월요일 10:00)과 `run-monthly-digest.ps1`(작업 스케줄러 "BlogMonthlyDigest", 매일 10:30 트리거되지만 스크립트 내부에서 매월 1일에만 동작)이 각각 최근 7일/지난 달의 `posts/*/draft_final.md`를 다이제스트 라이터(`agent/digest.md`)에게 자료로 넘겨 재작성시키고, 이미지 메이커·어셈블러를 거쳐 메일·텔레그램으로 발송한다.
 
 ## 에이전트 역할
 
@@ -30,6 +31,7 @@
 | 라이터 | `agent/write.md` | `research-result.md` + `guide/` 3종 반영 → `draft.md` (이미지는 마커로만 표시) |
 | 이미지 메이커 | `agent/image-maker.md` | `draft.md`의 이미지 마커 → 이미지 생성·검수 → `draft_final.md` |
 | 어셈블러 | `agent/assemble.md` | `draft_final.md` + `images/` → 최종 파일(`assembler.md`/`assembler.html`) |
+| 다이제스트 라이터 | `agent/digest.md` | 기간 내 `posts/*/draft_final.md` 여러 개 → 종합 재작성 → `draft.md` (리서치 단계 없음) |
 
 ## 메인 에이전트 규칙
 

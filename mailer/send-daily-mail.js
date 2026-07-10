@@ -39,6 +39,19 @@ if (fs.existsSync(newsBriefPath)) {
 
 const bodyText = `${briefText}\n\n${'='.repeat(40)}\n\n${postBodyText}`;
 
+// 날씨 카드 이미지가 있으면 메일 본문 맨 위에 인라인으로 넣는다
+const weatherImgPath = path.join('C:\\Users\\user\\Desktop\\news', `weather_${date}.png`);
+const hasWeatherImg = fs.existsSync(weatherImgPath);
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+const htmlBody = `
+${hasWeatherImg ? '<img src="cid:weathercard" alt="오늘의 날씨" style="max-width:100%;border-radius:8px;margin-bottom:16px;"><br>' : ''}
+<pre style="font-family:inherit;white-space:pre-wrap;">${escapeHtml(bodyText)}</pre>
+`;
+
 async function main() {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -48,20 +61,30 @@ async function main() {
     },
   });
 
+  const attachments = [
+    {
+      filename: `${date}-${path.basename(postDir)}.pdf`,
+      path: pdfPath,
+    },
+  ];
+  if (hasWeatherImg) {
+    attachments.push({
+      filename: `weather_${date}.png`,
+      path: weatherImgPath,
+      cid: 'weathercard',
+    });
+  }
+
   await transporter.sendMail({
     from: `"블로그 자동발행" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_TO,
     subject: `[오늘의 브리핑+블로그] ${title} (${date})`,
     text: bodyText,
-    attachments: [
-      {
-        filename: `${date}-${path.basename(postDir)}.pdf`,
-        path: pdfPath,
-      },
-    ],
+    html: htmlBody,
+    attachments,
   });
 
-  console.log(`메일 전송 완료: ${process.env.EMAIL_TO} (${date})`);
+  console.log(`메일 전송 완료: ${process.env.EMAIL_TO} (${date})${hasWeatherImg ? ' (날씨 카드 포함)' : ''}`);
 }
 
 main().catch((err) => {

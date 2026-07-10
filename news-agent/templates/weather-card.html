@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1000px; height: 560px;
+    font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+    overflow: hidden;
+  }
+  .card {
+    width: 1000px; height: 560px;
+    position: relative;
+    background: linear-gradient(160deg, #1a2a3a 0%, #10192a 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 48px 56px;
+    color: #f4f2ff;
+  }
+  .glow {
+    position: absolute; top: -120px; right: -80px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,206,120,0.25), rgba(255,206,120,0) 70%);
+  }
+  .kicker {
+    font-size: 20px; letter-spacing: 3px; color: #ffce78; font-weight: 700;
+    margin-bottom: 6px; z-index: 2;
+  }
+  .region {
+    font-size: 30px; font-weight: 800; margin-bottom: 28px; z-index: 2;
+  }
+  .main-row {
+    display: flex; align-items: baseline; gap: 18px; z-index: 2;
+  }
+  .temp-now {
+    font-size: 120px; font-weight: 800; line-height: 1;
+  }
+  .temp-range {
+    font-size: 24px; color: #b9c2d0;
+  }
+  .grid {
+    margin-top: auto;
+    display: flex;
+    gap: 16px;
+    z-index: 2;
+  }
+  .stat-box {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .stat-label {
+    font-size: 14px; color: #9aa4b8; margin-bottom: 6px; letter-spacing: 1px;
+  }
+  .stat-value {
+    font-size: 26px; font-weight: 700;
+  }
+  .footer-date {
+    position: absolute; bottom: 20px; right: 28px;
+    font-size: 14px; color: #6b7688; z-index: 2;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="glow"></div>
+    <div class="kicker">오늘의 날씨</div>
+    <div class="region">{{REGION}}</div>
+    <div class="main-row">
+      <div class="temp-now">{{TEMP}}°</div>
+      <div class="temp-range">최저 {{TEMP_MIN}}° / 최고 {{TEMP_MAX}}°</div>
+    </div>
+    <div class="grid">
+      <div class="stat-box">
+        <div class="stat-label">강수</div>
+        <div class="stat-value">{{RAIN}}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">미세먼지</div>
+        <div class="stat-value">{{DUST}}</div>
+      </div>
+    </div>
+    <div class="footer-date">{{DATE}} 기준</div>
+  </div>
+</body>
+</html>

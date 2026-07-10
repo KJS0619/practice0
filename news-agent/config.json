@@ -1,0 +1,8 @@
+{
+  "weatherRegion": "경기 안산",
+  "watchedStocks": [
+    "삼성전자",
+    "SK하이닉스"
+  ],
+  "includeStockRecommendations": true
+}
