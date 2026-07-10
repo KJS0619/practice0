@@ -54,6 +54,11 @@ try {
 } catch {
   "메일 발송 오류: $($_.Exception.Message)" | Out-File -FilePath $logFile -Append -Encoding utf8
 }
+try {
+  node send-daily-telegram.js $today 2>&1 | Out-File -FilePath $logFile -Append -Encoding utf8
+} catch {
+  "텔레그램 브리핑 전송 오류: $($_.Exception.Message)" | Out-File -FilePath $logFile -Append -Encoding utf8
+}
 Pop-Location
 
 "===== $today 실행 종료 =====" | Out-File -FilePath $logFile -Append -Encoding utf8

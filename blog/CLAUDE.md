@@ -20,7 +20,7 @@
 - `research-result.md`, `draft.md`, `draft_final.md`, `assembler.md`/`assembler.html` — 단계별 산출물
 - `posts/YYYY-MM-DD/` — **날짜별로 쌓이는 정식 발행분.** 매일 자동 실행되는 글은 여기에 그날 폴더를 만들어 `research-result.md`/`draft.md`/`draft_final.md`/`draft_final.pdf`/`images/`를 전부 그 안에 저장한다. (블로그 루트에 흩어져 있는 파일들은 수동 실행/실험용)
 - `run-daily-post.ps1` — Windows 작업 스케줄러 "BlogDailyPost"(매일 09:30)가 호출하는 실행 스크립트. 그날 뉴스 워처 결과(`Desktop\news\news_*.txt`)를 리서처의 1차 자료로 넘겨 "이번 주 소식" 주제로 파이프라인 전체를 무인 실행하고, `posts/오늘날짜/`에 저장한 뒤 텔레그램으로 완료를 알리고, `mailer/`로 그날 발행물을 메일 발송한다.
-- `../mailer/` (상위 폴더) — `posts/오늘날짜/draft_final.pdf`를 kjs0619@gmail.com으로 메일 발송하는 Node 스크립트(`send-daily-mail.js`, nodemailer + Gmail 앱 비밀번호). `run-daily-post.ps1`이 파이프라인 완료 후 자동으로 호출한다.
+- `../mailer/` (상위 폴더) — `posts/오늘날짜/draft_final.pdf`를 kjs0619@gmail.com으로 메일 발송하는 Node 스크립트(`send-daily-mail.js`, nodemailer + Gmail 앱 비밀번호, 메일 본문에는 그날 뉴스 브리핑도 함께 넣음). `send-daily-telegram.js`는 같은 내용을 텔레그램으로도 보내되, 4096자 제한 때문에 브리핑과 블로그 글을 문단 단위로 나눠 별도 메시지로 전송한다. `run-daily-post.ps1`이 파이프라인 완료 후 둘 다 자동으로 호출한다.
 
 ## 에이전트 역할
 
