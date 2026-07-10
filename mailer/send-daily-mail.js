@@ -22,11 +22,22 @@ const titleLine = mdText.split(/\r?\n/).find((l) => l.startsWith('# '));
 const title = titleLine ? titleLine.replace(/^#\s*/, '').trim() : `블로그 발행물 ${date}`;
 
 // 메일 본문용으로 마크다운 기호를 가볍게 정리 (이미지 마크다운, 강조기호 등)
-const bodyText = mdText
+const postBodyText = mdText
   .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
   .replace(/^#+\s*/gm, '')
   .replace(/`/g, '')
   .trim();
+
+// 뉴스 워처가 만든 그날의 브리핑(날씨·증시·Anthropic 소식)을 메일 맨 위에 함께 넣는다
+const newsBriefPath = path.join('C:\\Users\\user\\Desktop\\news', `news_${date}.txt`);
+let briefText = '';
+if (fs.existsSync(newsBriefPath)) {
+  briefText = fs.readFileSync(newsBriefPath, 'utf-8').trim();
+} else {
+  briefText = '(오늘의 날씨·증시 브리핑 파일을 찾지 못했습니다)';
+}
+
+const bodyText = `${briefText}\n\n${'='.repeat(40)}\n\n${postBodyText}`;
 
 async function main() {
   const transporter = nodemailer.createTransport({
@@ -40,7 +51,7 @@ async function main() {
   await transporter.sendMail({
     from: `"블로그 자동발행" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_TO,
-    subject: `[블로그] ${title} (${date})`,
+    subject: `[오늘의 브리핑+블로그] ${title} (${date})`,
     text: bodyText,
     attachments: [
       {
