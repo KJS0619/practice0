@@ -1,0 +1,56 @@
+{
+  "draft": "D:\\workspace\\practice0\\blog\\posts\\2026-07-10\\draft.md",
+  "generatedAt": "2026-07-10T04:48:43.116Z",
+  "thumbnail": {
+    "template": "thumbnail",
+    "fields": {
+      "KICKER": "THUMBNAIL",
+      "TITLE": "클로드(Claude) 이번 주 소식 정리: 버냉키 이사 선임부터 코드 업데이트 6가지까지",
+      "SUBTITLE": "이번 주(7월 3일~10일) Anthropic과 Claude 진영에서는 어떤 일이 있었을까요?"
+    },
+    "file": "images/thumbnail.png",
+    "approved": true,
+    "regenCount": 0,
+    "regenReasons": []
+  },
+  "markers": [
+    {
+      "id": 1,
+      "description": "Anthropic 로고와 뉴스룸 화면을 연상시키는 대표 이미지",
+      "template": "template_default",
+      "fields": {
+        "TITLE": "Anthropic 로고와 뉴스룸 화면을 연상시키는 대표 이미지"
+      },
+      "file": "images/img_1.png",
+      "approved": true,
+      "regenCount": 0,
+      "regenReasons": []
+    },
+    {
+      "id": 2,
+      "description": "Claude Code 터미널 화면과 버전 업데이트 로그를 보여주는 이미지",
+      "template": "template_default",
+      "fields": {
+        "TITLE": "Claude Code 터미널 화면과 버전 업데이트 로그를 보여주는 이미지"
+      },
+      "file": "images/img_2.png",
+      "approved": true,
+      "regenCount": 0,
+      "regenReasons": []
+    },
+    {
+      "id": 3,
+      "description": "안전장치·프레임워크를 상징하는 방패 또는 체크리스트 형태의 인포그래픽",
+      "template": "template_info",
+      "fields": {
+        "KICKER": "INFO",
+        "STAT": "#",
+        "LABEL": "안전장치·프레임워크를 상징하는 방패 또는 체크리스트 형태의 인포그래픽"
+      },
+      "file": "images/img_3.png",
+      "approved": true,
+      "regenCount": 0,
+      "regenReasons": []
+    }
+  ]
+}

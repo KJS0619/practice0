@@ -11,7 +11,7 @@ const path = require('path');
 const { chromium } = require('playwright');
 
 const TEMPLATE_DIR = path.join(__dirname, 'templates');
-const MARKER_RE = /<!--\s*IMAGE:\s*\[(.*?)\]\s*-->/g;
+const MARKER_RE = /<!--\s*IMAGE:\s*\[?(.*?)\]?\s*-->/g;
 
 const KEYWORDS = {
   template_scene: ['풍경', '장소', '분위기', '공간', '배경', '도시', '거리', '실내', '야외', '자연', '사무실', '바다', '숲', '하늘', '카페'],
