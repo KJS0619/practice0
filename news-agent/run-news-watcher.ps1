@@ -16,7 +16,12 @@ $prompt = @"
 
 오늘 날짜는 $today 다.
 
-WebFetch/WebSearch 도구로 지침서에 나온 공식 소스(https://www.anthropic.com/news, https://code.claude.com/docs/en/whats-new, https://code.claude.com/docs/en/changelog, https://claude.com/product/claude-code, https://www.anthropic.com)를 실제로 확인해서 가장 최근 업데이트/발표 항목들을 찾아라. 비공식 블로그나 리뷰 매체는 사실 확인용으로 쓰지 마라.
+WebFetch/WebSearch 도구로 지침서에 나온 세 가지를 전부 확인해라:
+1. Anthropic 공식 소스(https://www.anthropic.com/news, https://code.claude.com/docs/en/whats-new, https://code.claude.com/docs/en/changelog, https://claude.com/product/claude-code, https://www.anthropic.com)에서 가장 최근 업데이트/발표
+2. 경기 안산 지역 오늘 날씨(기온·강수확률·미세먼지)
+3. 코스피/코스닥 지수 현황(등락률, 장중인지 종가 기준인지)
+
+비공식 블로그나 확인되지 않은 매체는 사실 확인용으로 쓰지 마라.
 
 지침서의 "4. 출력 형식"에 정의된 구조 그대로 한국어 요약 txt를 작성하고, 아래 경로에 저장해라(Write 도구 사용):
 C:\Users\user\Desktop\news\news_$today.txt
